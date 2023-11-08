@@ -3,15 +3,30 @@ import java.util.Random;
 import java.util.Arrays;
 
 class Conversation {
+    /**
+     * These are almost all of the variables that will be used in this program
+     * @openingStatements is a list of strings containing all of the strings that can be printed when the conversation starts
+     * @setResponses is a list of strings containing all of the responses that can be printed if no mirror words are found
+     * @closingStatements is a list of strings that contains all of the statements that can be printed at the end of the conversation
+     * @mirrorWords is a list of lists of strings that contains all of the strings that can be mirrored, and what to mirror them with, it is functionally a hash table
+     * @random is the random number generator used for choosing responses at the start and end of the conversation
+     * @input is a scanner that is used for gathering user input for both the number of turns and messages in the conversation
+     * @transcript is an empty list of strings that will be populated with both the user's inputs and the programs outputs
+     */
     static String[] openingStatements = {"What would you like to talk about today?", "What is on your mind?", "What's up?"};
     static String[] setResponses = {"That's great", "Very cool", "Neato", "How interesting"}; // create a list of strings that will be used to respond to unknown statements
     static String[] closingStatements = {"See you later", "Goodbye", "Hope you have a good day"}; // a list of strings to end the conversation with
     static String[][] mirrorWords = {{"I", "you"}, {"me", "you"}, {"you", "I"}, {"am", "are"}, {"my", "your"}, {"your", "my"}, {"Im", "you're"}, {"youre", "I'm"}}; // a 2d array of strings the user might input and what to replace them with
     static Random random = new Random(); // create a module to use for generating random numbers
     static Scanner input = new Scanner(System.in); // create a module to use for getting user input
-    static String transcript[] = {};
+    static String[] transcript = {};
 
-    // You will start the conversation here.
+    /**
+     * You will start the conversation here.
+     * This is where most of the logic for the conversation bot is
+     * This method also calls other methods to help with the process
+     *      Those methods being getOutput, getNumTurns, and addStringToTranscript
+     */
     public static void main(String[] arguments) {
         int totalTurns = getNumTurns(); // get the total number of turns the user wants to take
 
@@ -21,7 +36,7 @@ class Conversation {
 
         String userInput; // create a variable to hold the user's input
         String outputString; // create a variable to hold the output from the computer
-        for (int i=0; i < totalTurns+1; i++){ // run the following code the number of times the user asked for
+        for (int i=0; i < totalTurns; i++){ // run the following code the number of times the user asked for
             userInput = input.nextLine(); // get user input
             addStringToTranscript(userInput); // add the user's input to the transcript
             outputString = getOutput(userInput); // check the user's input and generate an output
@@ -66,7 +81,9 @@ class Conversation {
         else{
             stringToReturn = String.join(" ", splicedString); // recombines all of the strings with spaces between each one
             stringToReturn = stringToReturn.replace('.', '?'); // replaces all periods with question marks
-            stringToReturn = stringToReturn.replaceFirst(String.valueOf(stringToReturn.charAt(0)), String.valueOf(stringToReturn.charAt(0)).toUpperCase()); // capitalizes the first letter
+            try { 
+                stringToReturn = stringToReturn.replaceFirst(String.valueOf(stringToReturn.charAt(0)), String.valueOf(stringToReturn.charAt(0)).toUpperCase()); // capitalizes the first letter
+            } catch (Exception e) { } // this try catch is meant to "fail silently" since it just wont capitalize the first letter if the first letter isn't able to be capitalized
 
             if(stringToReturn.endsWith("?") == false){ // if there isn't a question mark on the end
                 stringToReturn = stringToReturn + "?"; // put a question mark on the end
